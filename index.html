@@ -1,614 +1,462 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sukhdev Singh - Professional Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #ec4899;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
         }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: white;
-            color: var(--dark);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
             overflow-x: hidden;
+            position: relative;
         }
-        .hero-text {
-            font-family: 'Montserrat', sans-serif;
+
+        /* Animated Background */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 20s infinite ease-in-out;
+            opacity: 0.4;
         }
-        .card {
-            background: white;
+        .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--accent); bottom: 10%; right: -50px; animation-delay: -5s; }
+        .orb-3 { width: 200px; height: 200px; background: var(--secondary); top: 40%; left: 40%; animation-delay: -10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 50px); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
-        .card:active {
-            transform: scale(0.98);
-        }
-        .ripple-effect {
+
+        .glass-card::before {
+            content: '';
             position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .glass-card:hover::before { opacity: 1; }
+
+        /* Typography & Gradient Text */
+        .font-heading { font-family: 'Space Grotesk', sans-serif; }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #818cf8 0%, #d8b4fe 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Profile Image Glow */
+        .profile-glow {
+            position: relative;
+        }
+        .profile-glow::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
             border-radius: 50%;
-            background: rgba(67, 97, 238, 0.3);
-            transform: scale(0);
-            pointer-events: none;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            z-index: -1;
+            animation: spin 4s linear infinite;
         }
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-        .icon-wrapper {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .typing-container {
-            height: 2.5rem;
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Typing Effect */
         .typing-text {
-            border-right: 2px solid var(--accent);
-            animation: blinkCursor 0.7s infinite, typing 3.5s steps(30) infinite;
+            border-right: 3px solid var(--accent);
+            padding-right: 5px;
             white-space: nowrap;
             overflow: hidden;
             display: inline-block;
+            color: #cbd5e1;
         }
-        @keyframes typing {
-            0% { width: 0 }
-            30% { width: 100% }
-            80% { width: 100% }
-            100% { width: 0 }
-        }
-        @keyframes blinkCursor {
-            from { border-right-color: var(--accent) }
-            to { border-right-color: transparent }
-        }
-        .social-icon {
-            transition: all 0.3s ease;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .social-icon:hover {
-            transform: scale(1.1);
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 0.8s forwards;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1 }
-        }
-        .delay-1 { animation-delay: 0.2s }
-        .delay-2 { animation-delay: 0.4s }
-        .delay-3 { animation-delay: 0.6s }
-        .delay-avatar { animation-delay: 0.1s }
-        .delay-name { animation-delay: 0.3s }
-        .delay-title { animation-delay: 0.5s }
-        .delay-location { animation-delay: 0.7s }
-        .profile-img {
-            border: 4px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .profile-img:hover {
-            transform: scale(1.05);
-        }
-        .section-title {
-            position: relative;
-            display: inline-block;
-        }
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 2px;
-        }
-        .quote-container {
-            background: linear-gradient(135deg, #4361ee, #3f37c9);
-            color: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .quote-container::before {
-            content: '"';
-            position: absolute;
-            font-size: 15rem;
-            font-family: serif;
-            color: rgba(255,255,255,0.1);
-            top: -3rem;
-            left: -1rem;
-            line-height: 1;
-        }
-        .quote-text {
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            position: relative;
-            transition: opacity 0.5s ease;
-        }
-        .quote-author {
-            font-style: italic;
-            opacity: 0.9;
-            transition: opacity 0.5s ease;
-        }
-        .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+
+        /* Timeline Styling */
+        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
         .timeline::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background-color: var(--primary);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -2px;
-            border-radius: 2px;
+            content: ''; position: absolute; width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            top: 0; bottom: 0; left: 50%; margin-left: -1px;
         }
-        .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            width: 50%;
-            box-sizing: border-box;
-        }
+        .timeline-item { padding: 10px 50px; position: relative; width: 50%; }
         .timeline-item::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            border: 4px solid var(--primary);
-            border-radius: 50%;
-            top: 15px;
-            z-index: 1;
+            content: ''; position: absolute; width: 16px; height: 16px;
+            background: var(--bg-dark); border: 3px solid var(--secondary);
+            border-radius: 50%; top: 20px; z-index: 10;
+            box-shadow: 0 0 10px var(--secondary);
         }
-        .left {
-            left: 0;
-        }
-        .right {
-            left: 50%;
-        }
-        .left::after {
-            right: -12px;
-        }
-        .right::after {
-            left: -12px;
-        }
-        .timeline-content {
-            padding: 20px;
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .contact-input {
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        .contact-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-            outline: none;
-        }
-        .contact-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .contact-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-        .contact-btn:active {
-            transform: translateY(0);
-        }
-        .form-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-        .form-label {
-            position: absolute;
-            top: 0.75rem;
-            left: 1rem;
-            color: #64748b;
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-        .contact-input:focus + .form-label,
-        .contact-input:not(:placeholder-shown) + .form-label {
-            transform: translateY(-1.5rem) scale(0.85);
-            color: white;
-            background: var(--primary);
-            padding: 0 0.5rem;
-            border-radius: 0.5rem;
-        }
-        .floating-label {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-        .floating-label input,
-        .floating-label textarea {
-            padding-top: 1.5rem;
-        }
-        .floating-label label {
-            position: absolute;
-            top: 0.75rem;
-            left: 1rem;
-            color: #64748b;
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-        .floating-label input:focus + label,
-        .floating-label input:not(:placeholder-shown) + label,
-        .floating-label textarea:focus + label,
-        .floating-label textarea:not(:placeholder-shown) + label {
-            transform: translateY(-1.5rem) scale(0.85);
-            color: var(--primary);
-        }
-        .project-card {
-            background: white;
-            border-radius: 1.2em;
-            box-shadow: 0 6px 24px rgba(67,97,238,0.08);
-            padding: 1.6em 1.5em 1.2em 1.5em;
-            margin-bottom: 1.5em;
-            border: 1px solid #e8eaf6;
-            transition: box-shadow 0.2s, transform 0.2s;
-            position: relative;
-        }
-        .project-card:hover {
-            box-shadow: 0 12px 36px rgba(67,97,238,0.13);
-            transform: translateY(-4px) scale(1.01);
-        }
-        .project-links {
-            margin-top: 0.7em;
-        }
-        .project-links a {
-            color: var(--primary);
-            font-size: 1.1em;
-            margin-right: 1em;
-            transition: color 0.2s;
-        }
-        .project-links a:hover {
-            color: var(--accent);
-        }
-        .project-badge {
-            display: inline-block;
-            background: linear-gradient(90deg,#4361ee,#f72585);
-            color: #fff;
-            border-radius: 0.6em;
-            font-size: 0.95em;
-            font-weight: 600;
-            padding: 0.18em 0.8em;
-            margin-right: 0.4em;
-            vertical-align: middle;
-            margin-bottom: 0.3em;
-        }
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; }
+        .left::after { right: -9px; }
+        .right::after { left: -9px; }
+
         @media (max-width: 768px) {
-            .timeline::after {
-                left: 31px;
-            }
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            .timeline-item::after {
-                left: 19px;
-            }
-            .left::after,
-            .right::after {
-                left: 19px;
-            }
-            .right {
-                left: 0;
-            }
-            .quote-text {
-                font-size: 1.2rem;
-            }
-            .section-title {
-                font-size: 2rem;
-            }
-            .hero-text {
-                font-size: 2.5rem;
-            }
-            .profile-img {
-                width: 120px;
-                height: 120px;
-            }
+            .timeline::after { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 50px; padding-right: 10px; text-align: left; }
+            .timeline-item::after { left: 11px; }
+            .left { left: 0; }
+            .right { left: 0; }
         }
+
+        /* Inputs */
+        .modern-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* Social Icons */
+        .social-btn {
+            width: 3rem; height: 3rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .social-btn:hover {
+            background: white;
+            transform: translateY(-3px) scale(1.1);
+        }
+        .social-btn:hover i { color: var(--bg-dark); }
     </style>
 </head>
 <body>
-    <div class="container mx-auto px-4 py-12 max-w-6xl">
+
+    <!-- Background Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl relative z-10">
+        
         <!-- Hero Section -->
-        <section class="flex flex-col items-center justify-center min-h-[80vh] text-center">
-            <div class="w-full max-w-2xl">
-                <div class="relative inline-block mb-8 fade-in delay-avatar">
-                    <div class="profile-img w-40 h-40 rounded-full bg-gray-100 overflow-hidden mx-auto cursor-pointer">
-                        <img src="photo.png"
-                             alt="Sukhdev Singh"
-                             class="w-full h-full object-cover"
-                             onload="this.style.opacity = 1"
-                             style="opacity: 0; transition: opacity 0.5s ease">
+        <section class="min-h-[90vh] flex flex-col items-center justify-center text-center">
+            <div class="w-full max-w-3xl">
+                <!-- Profile Image -->
+                <div class="relative inline-block mb-10 fade-in-up">
+                    <div class="profile-glow rounded-full p-1">
+                        <div class="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-[#0f172a] relative z-10 bg-gray-800">
+                            <img src="photo.png"
+                                 alt="Sukhdev Singh"
+                                 class="w-full h-full object-cover"
+                                 onload="this.style.opacity = 1"
+                                 style="opacity: 0; transition: opacity 0.5s ease">
+                        </div>
                     </div>
-                    <div class="absolute -bottom-2 -right-2 bg-white p-2 rounded-full shadow-md">
-                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded-full">
-                            <i class="fas fa-check text-white text-sm"></i>
+                    <!-- Status Badge -->
+                    <div class="absolute bottom-2 right-2 z-20">
+                        <div class="bg-gray-900 rounded-full p-1.5 border border-gray-700">
+                            <div class="bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-1.5">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <h1 class="hero-text text-4xl md:text-5xl font-bold mb-4 text-gray-900 fade-in delay-name">
-                    Sukhdev Singh
+                <h1 class="font-heading text-5xl md:text-7xl font-bold mb-6 tracking-tight fade-in-up delay-100">
+                    <span class="text-white">I am</span> <span class="text-gradient">Sukhdev Singh</span>
                 </h1>
                 
-                <div class="typing-container mb-4 fade-in delay-title">
-                    <span class="typing-text text-xl md:text-2xl font-medium text-gray-600"></span>
+                <div class="h-8 mb-8 fade-in-up delay-200">
+                    <span class="typing-text text-xl md:text-2xl font-medium font-heading"></span>
                 </div>
                 
-                <div class="flex items-center justify-center space-x-2 text-gray-500 fade-in delay-location mb-4">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Bharatpur, Rajasthan, India</span>
+                <div class="flex items-center justify-center gap-2 text-gray-400 mb-8 fade-in-up delay-300">
+                    <i class="fas fa-map-pin text-accent"></i>
+                    <span class="tracking-wide">Bharatpur, Rajasthan, India</span>
                 </div>
-                <div class="flex flex-wrap justify-center gap-3 mb-3">
-                    <a href="mailto:sukhdevr898@gmail.com" class="social-icon text-blue-600" title="Email">
-                        <i class="fa-solid fa-envelope"></i>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center gap-4 mb-10 fade-in-up delay-400">
+                    <a href="#contact" class="px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 transform hover:scale-105 transition-all">
+                        Hire Me
                     </a>
-                    <a href="tel:9352037092" class="social-icon text-green-600" title="Call">
-                        <i class="fa-solid fa-phone"></i>
-                    </a>
-                    <a href="https://github.com/sukhdevr898" target="_blank" class="social-icon text-gray-800" title="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/sukhdevr898" target="_blank" class="social-icon text-blue-700" title="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="https://instagram.com/sukh_rai898" target="_blank" class="social-icon text-pink-500" title="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://instagram.com/sardar_ji_898" target="_blank" class="social-icon text-purple-500" title="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://t.me/sukhdevr898" target="_blank" class="social-icon text-blue-500" title="Telegram">
-                        <i class="fab fa-telegram"></i>
+                    <a href="#projects" class="px-8 py-3 rounded-full glass-card hover:bg-white/10 font-medium transition-all">
+                        View Work
                     </a>
                 </div>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-5 py-2 rounded-full font-bold shadow-md animate-bounce">Open to opportunities</span>
-                    <span class="inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                        <i class="fa-solid fa-location-dot"></i> Bharatpur, Rajasthan
+
+                <!-- Social Links -->
+                <div class="flex flex-wrap justify-center gap-4 fade-in-up delay-400">
+                    <a href="mailto:sukhdevr898@gmail.com" class="social-btn" title="Email"><i class="fa-solid fa-envelope text-white"></i></a>
+                    <a href="tel:9352037092" class="social-btn" title="Call"><i class="fa-solid fa-phone text-white"></i></a>
+                    <a href="https://github.com/sukhdevr898" target="_blank" class="social-btn" title="GitHub"><i class="fab fa-github text-white"></i></a>
+                    <a href="https://linkedin.com/in/sukhdevr898" target="_blank" class="social-btn" title="LinkedIn"><i class="fab fa-linkedin-in text-white"></i></a>
+                    <a href="https://instagram.com/sukh_rai898" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram text-white"></i></a>
+                    <a href="https://t.me/sukhdevr898" target="_blank" class="social-btn" title="Telegram"><i class="fab fa-telegram text-white"></i></a>
+                </div>
+
+                <div class="mt-12 flex justify-center fade-in-up delay-400">
+                    <span class="px-4 py-1.5 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-sm font-medium flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        Open to opportunities
                     </span>
                 </div>
             </div>
         </section>
 
-        <!-- Motivational Quote Section -->
-        <section class="my-20 fade-in">
-            <div class="quote-container">
-                <div class="text-center">
-                    <p class="quote-text">"Success is not final, failure is not fatal: It is the courage to continue that counts."</p>
-                    <p class="quote-author">- Winston Churchill</p>
-                </div>
+        <!-- Quote Section -->
+        <section class="my-24 fade-in-up">
+            <div class="glass-card p-10 md:p-14 text-center relative max-w-4xl mx-auto border-l-4 border-l-purple-500">
+                <i class="fas fa-quote-left text-4xl text-gray-600 absolute top-6 left-6 opacity-50"></i>
+                <p class="quote-text text-2xl md:text-3xl font-light italic text-gray-200 mb-4 transition-opacity duration-500"></p>
+                <p class="quote-author text-accent font-bold uppercase tracking-widest text-sm transition-opacity duration-500"></p>
             </div>
         </section>
 
         <!-- Skills Section -->
-        <section class="my-20">
-            <h2 class="section-title text-3xl font-bold mb-12 text-center fade-in">My Expertise</h2>
+        <section class="my-32">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">My <span class="text-gradient">Expertise</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Skill 1 -->
-                <div class="card p-6 fade-in delay-1">
-                    <div class="icon-wrapper bg-blue-50 text-blue-600 mb-4">
+                <!-- Skill Cards -->
+                <div class="glass-card p-8 group fade-in-up delay-100">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-laptop-code text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Computer Operator</h3>
-                    <p class="text-gray-600">Efficient in computer operations, system maintenance, and technical troubleshooting with precision.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">Computer Operator</h3>
+                    <p class="text-gray-400 leading-relaxed">Efficient in computer operations, system maintenance, and technical troubleshooting with precision.</p>
                 </div>
-                
-                <!-- Skill 2 -->
-                <div class="card p-6 fade-in delay-1">
-                    <div class="icon-wrapper bg-purple-50 text-purple-600 mb-4">
+
+                <div class="glass-card p-8 group fade-in-up delay-100">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 text-purple-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-cogs text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Machine Operator</h3>
-                    <p class="text-gray-600">Skilled in operating and maintaining industrial machinery and laser label printers.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">Machine Operator</h3>
+                    <p class="text-gray-400 leading-relaxed">Skilled in operating and maintaining industrial machinery and laser label printers.</p>
                 </div>
-                
-                <!-- Skill 3 -->
-                <div class="card p-6 fade-in delay-2">
-                    <div class="icon-wrapper bg-pink-50 text-pink-600 mb-4">
+
+                <div class="glass-card p-8 group fade-in-up delay-200">
+                    <div class="w-14 h-14 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6 text-pink-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-robot text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">AI Trainer</h3>
-                    <p class="text-gray-600">Specialized in training and optimizing AI models for education and productivity tools.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">AI Trainer</h3>
+                    <p class="text-gray-400 leading-relaxed">Specialized in training and optimizing AI models for education and productivity tools.</p>
                 </div>
-                
-                <!-- Skill 4 -->
-                <div class="card p-6 fade-in delay-2">
-                    <div class="icon-wrapper bg-green-50 text-green-600 mb-4">
+
+                <div class="glass-card p-8 group fade-in-up delay-200">
+                    <div class="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6 text-green-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-code text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Web Developer</h3>
-                    <p class="text-gray-600">Building modern, responsive websites and web apps with HTML, JS, PHP, MySQL, and React.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">Web Developer</h3>
+                    <p class="text-gray-400 leading-relaxed">Building modern, responsive websites and web apps with HTML, JS, PHP, MySQL, and React.</p>
                 </div>
-                
-                <!-- Skill 5 -->
-                <div class="card p-6 fade-in delay-3">
-                    <div class="icon-wrapper bg-yellow-50 text-yellow-600 mb-4">
+
+                <div class="glass-card p-8 group fade-in-up delay-300">
+                    <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-6 text-yellow-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-laptop text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Software Developer</h3>
-                    <p class="text-gray-600">Developing robust, scalable software and automation solutions for business and education.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">Software Developer</h3>
+                    <p class="text-gray-400 leading-relaxed">Developing robust, scalable software and automation solutions for business and education.</p>
                 </div>
-                
-                <!-- Skill 6 -->
-                <div class="card p-6 fade-in delay-3">
-                    <div class="icon-wrapper bg-red-50 text-red-600 mb-4">
+
+                <div class="glass-card p-8 group fade-in-up delay-300">
+                    <div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mb-6 text-red-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-shield-alt text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Cybersecurity Enthusiast</h3>
-                    <p class="text-gray-600">Applying best practices to protect systems, data and privacy in digital environments.</p>
+                    <h3 class="text-xl font-bold mb-3 text-white">Cybersecurity</h3>
+                    <p class="text-gray-400 leading-relaxed">Applying best practices to protect systems, data and privacy in digital environments.</p>
                 </div>
             </div>
         </section>
 
         <!-- Projects Section -->
-        <section class="my-20">
-            <h2 class="section-title text-3xl font-bold mb-12 text-center fade-in">Projects</h2>
+        <section id="projects" class="my-32">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Featured <span class="text-gradient">Projects</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"></div>
+            </div>
+
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="project-card fade-in">
-                    <span class="project-badge"><i class="fa-solid fa-stethoscope"></i> Medico AI</span>
-                    <div class="text-sm text-gray-500 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-days"></i> 2024 - Present
-                        <a href="https://github.com/sukhdevr898/medicoai" target="_blank" class="ml-2 text-indigo-700 hover:underline">
-                            <i class="fa-brands fa-github"></i> Github
-                        </a>
-                        <a href="https://ai898.free.nf/medicoai" target="_blank" class="ml-2 text-pink-700 hover:underline">
-                            <i class="fa-solid fa-link"></i> Live
-                        </a>
+                <!-- Project 1 -->
+                <div class="glass-card p-6 flex flex-col h-full fade-in-up">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-indigo-500/20 rounded-lg text-indigo-400">
+                            <i class="fa-solid fa-stethoscope text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 border border-gray-700 px-2 py-1 rounded">2024 - Present</span>
                     </div>
-                    <ul class="list-disc ml-5 text-gray-700 space-y-1 text-base mb-2">
-                        <li>AI-powered assistant for medical students & research</li>
-                        <li>Evidence-based, up-to-date medical knowledge</li>
-                        <li>Visual explanations, MCQs, OSCEs, and clinical scenarios</li>
-                        <li>Open source, privacy-respecting, accessible</li>
-                    </ul>
+                    <h3 class="text-2xl font-bold text-white mb-2">Medico AI</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">AI-powered assistant for medical students providing evidence-based knowledge, OSCEs, and clinical scenarios.</p>
+                    
+                    <div class="border-t border-gray-700 pt-4 mt-auto">
+                        <div class="flex gap-4">
+                            <a href="https://github.com/sukhdevr898/medicoai" target="_blank" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
+                                <i class="fa-brands fa-github"></i> Source
+                            </a>
+                            <a href="https://ai898.free.nf/medicoai" target="_blank" class="flex items-center gap-2 text-sm text-pink-400 hover:text-pink-300 transition-colors">
+                                <i class="fa-solid fa-external-link-alt"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="project-card fade-in delay-1">
-                    <span class="project-badge"><i class="fa-solid fa-robot"></i> AI898 Tools</span>
-                    <div class="text-sm text-gray-500 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-days"></i> 2024 - Present
-                        <a href="https://github.com/sukhdevr898/ai898" target="_blank" class="ml-2 text-indigo-700 hover:underline">
-                            <i class="fa-brands fa-github"></i> Github
-                        </a>
-                        <a href="https://ai898.free.nf/" target="_blank" class="ml-2 text-pink-700 hover:underline">
-                            <i class="fa-solid fa-link"></i> Live
-                        </a>
+
+                <!-- Project 2 -->
+                <div class="glass-card p-6 flex flex-col h-full fade-in-up delay-100">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-pink-500/20 rounded-lg text-pink-400">
+                            <i class="fa-solid fa-robot text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 border border-gray-700 px-2 py-1 rounded">2024 - Present</span>
                     </div>
-                    <ul class="list-disc ml-5 text-gray-700 space-y-1 text-base mb-2">
-                        <li>Free and unlimited AI tools for productivity & learning</li>
-                        <li>Includes chatbots, writing, coding, and image tools</li>
-                        <li>No subscription, open to all, community-driven</li>
-                    </ul>
+                    <h3 class="text-2xl font-bold text-white mb-2">AI898 Tools</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">A suite of free, unlimited AI tools for productivity, coding, writing, and image generation. No subscriptions.</p>
+                    
+                    <div class="border-t border-gray-700 pt-4 mt-auto">
+                        <div class="flex gap-4">
+                            <a href="https://github.com/sukhdevr898/ai898" target="_blank" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
+                                <i class="fa-brands fa-github"></i> Source
+                            </a>
+                            <a href="https://ai898.free.nf/" target="_blank" class="flex items-center gap-2 text-sm text-pink-400 hover:text-pink-300 transition-colors">
+                                <i class="fa-solid fa-external-link-alt"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="project-card fade-in delay-2">
-                    <span class="project-badge"><i class="fa-solid fa-clock-rotate-left"></i> Timeline 898</span>
-                    <div class="text-sm text-gray-500 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-days"></i> 2024 - Present
-                        <a href="https://github.com/sukhdevr898/timeline898" target="_blank" class="ml-2 text-indigo-700 hover:underline">
-                            <i class="fa-brands fa-github"></i> Github
-                        </a>
-                        <a href="https://ai898.free.nf/timeline/" target="_blank" class="ml-2 text-pink-700 hover:underline">
-                            <i class="fa-solid fa-link"></i> Live
-                        </a>
+
+                <!-- Project 3 -->
+                <div class="glass-card p-6 flex flex-col h-full fade-in-up delay-200">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-green-500/20 rounded-lg text-green-400">
+                            <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 border border-gray-700 px-2 py-1 rounded">2024 - Present</span>
                     </div>
-                    <ul class="list-disc ml-5 text-gray-700 space-y-1 text-base mb-2">
-                        <li>AI-powered time management & study planner</li>
-                        <li>Visual analytics, routines, daily/monthly tracking</li>
-                        <li>Designed for students & professionals</li>
-                    </ul>
+                    <h3 class="text-2xl font-bold text-white mb-2">Timeline 898</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Visual analytics and AI-powered time management planner for students and professionals.</p>
+                    
+                    <div class="border-t border-gray-700 pt-4 mt-auto">
+                        <div class="flex gap-4">
+                            <a href="https://github.com/sukhdevr898/timeline898" target="_blank" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
+                                <i class="fa-brands fa-github"></i> Source
+                            </a>
+                            <a href="https://ai898.free.nf/timeline/" target="_blank" class="flex items-center gap-2 text-sm text-pink-400 hover:text-pink-300 transition-colors">
+                                <i class="fa-solid fa-external-link-alt"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Experience Section -->
-        <section class="my-20">
-            <h2 class="section-title text-3xl font-bold mb-12 text-center fade-in">Professional Journey</h2>
-            <div class="timeline">
-                <div class="timeline-item left fade-in">
-                    <div class="timeline-content">
-                        <h3 class="font-bold text-lg mb-1">Laser Printer & Label Machine Operator</h3>
-                        <p class="text-gray-500 mb-2">Trivij Pvt Ltd, Tapukara | 2025</p>
-                        <ul class="list-disc ml-6 text-gray-600 mb-2">
-                            <li>Operated laser printers and label machines for production lines</li>
-                            <li>Maintained equipment and ensured safety compliance</li>
-                            <li>Trained new operators and minimized downtime</li>
+        <section class="my-32">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mb-4">Professional <span class="text-gradient">Journey</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-pink-500 to-orange-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="timeline fade-in-up">
+                <div class="timeline-item left">
+                    <div class="glass-card p-6 hover:border-blue-500/50 transition-colors">
+                        <h3 class="font-bold text-lg text-blue-400">Machine Operator</h3>
+                        <p class="text-sm text-gray-500 mb-2 font-mono">Trivij Pvt Ltd, Tapukara | 2025</p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside">
+                            <li>Operated laser printers & label machines</li>
+                            <li>Ensured safety compliance & maintenance</li>
                         </ul>
                     </div>
                 </div>
-                <div class="timeline-item right fade-in delay-1">
-                    <div class="timeline-content">
-                        <h3 class="font-bold text-lg mb-1">Supervisor</h3>
-                        <p class="text-gray-500 mb-2">DLJM, Alwar | 2024-2025</p>
-                        <ul class="list-disc ml-6 text-gray-600 mb-2">
-                            <li>Supervised daily production operations and teams</li>
-                            <li>Achieved production and quality targets</li>
-                            <li>Implemented process improvements and safety measures</li>
+                <div class="timeline-item right">
+                    <div class="glass-card p-6 hover:border-purple-500/50 transition-colors">
+                        <h3 class="font-bold text-lg text-purple-400">Supervisor</h3>
+                        <p class="text-sm text-gray-500 mb-2 font-mono">DLJM, Alwar | 2024-2025</p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside">
+                            <li>Supervised daily production & teams</li>
+                            <li>Achieved quality targets & process improvements</li>
                         </ul>
                     </div>
                 </div>
-                <div class="timeline-item left fade-in delay-2">
-                    <div class="timeline-content">
-                        <h3 class="font-bold text-lg mb-1">Production Line Operator</h3>
-                        <p class="text-gray-500 mb-2">Honda Four Wheeler, Alwar | 2024</p>
-                        <ul class="list-disc ml-6 text-gray-600 mb-2">
-                            <li>Maintained high-quality standards in assembly line</li>
-                            <li>Reduced assembly time with process improvements</li>
-                            <li>Trained new team members</li>
+                <div class="timeline-item left">
+                    <div class="glass-card p-6 hover:border-green-500/50 transition-colors">
+                        <h3 class="font-bold text-lg text-green-400">Production Line Operator</h3>
+                        <p class="text-sm text-gray-500 mb-2 font-mono">Honda Four Wheeler, Alwar | 2024</p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside">
+                            <li>Maintained quality standards in assembly</li>
+                            <li>Reduced assembly time efficiently</li>
                         </ul>
                     </div>
                 </div>
-                <div class="timeline-item right fade-in delay-3">
-                    <div class="timeline-content">
-                        <h3 class="font-bold text-lg mb-1">Receptionist</h3>
-                        <p class="text-gray-500 mb-2">Local Showroom, Jaipur | 2023</p>
-                        <ul class="list-disc ml-6 text-gray-600 mb-2">
-                            <li>Managed billing, appointments, and client queries</li>
-                            <li>Resolved discrepancies and improved communication</li>
+                <div class="timeline-item right">
+                    <div class="glass-card p-6 hover:border-yellow-500/50 transition-colors">
+                        <h3 class="font-bold text-lg text-yellow-400">Receptionist</h3>
+                        <p class="text-sm text-gray-500 mb-2 font-mono">Local Showroom, Jaipur | 2023</p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside">
+                            <li>Managed billing & client appointments</li>
+                            <li>Resolved discrepancies & queries</li>
                         </ul>
                     </div>
                 </div>
-                <div class="timeline-item left fade-in delay-2">
-                    <div class="timeline-content">
-                        <h3 class="font-bold text-lg mb-1">Telecaller</h3>
-                        <p class="text-gray-500 mb-2">HDFC, New Delhi | 2023</p>
-                        <ul class="list-disc ml-6 text-gray-600 mb-2">
-                            <li>Achieved daily call targets and increased conversions</li>
-                            <li>Maintained high customer satisfaction scores</li>
+                <div class="timeline-item left">
+                    <div class="glass-card p-6 hover:border-red-500/50 transition-colors">
+                        <h3 class="font-bold text-lg text-red-400">Telecaller</h3>
+                        <p class="text-sm text-gray-500 mb-2 font-mono">HDFC, New Delhi | 2023</p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside">
+                            <li>Achieved call targets & conversions</li>
+                            <li>Maintained high satisfaction scores</li>
                         </ul>
                     </div>
                 </div>
@@ -616,61 +464,42 @@
         </section>
 
         <!-- Contact Section -->
-        <section class="my-20">
-            <h2 class="section-title text-3xl font-bold mb-12 text-center fade-in">Get In Touch</h2>
-            <div class="max-w-md mx-auto card p-8 fade-in">
-                <form>
-                    <div class="floating-label mb-6">
-                        <input type="text" id="name" class="contact-input" placeholder=" " required>
-                        <label for="name">Your Name</label>
+        <section id="contact" class="my-32 max-w-2xl mx-auto">
+            <div class="glass-card p-8 md:p-12 fade-in-up">
+                <div class="text-center mb-10">
+                    <h2 class="font-heading text-3xl font-bold mb-2">Get In <span class="text-gradient">Touch</span></h2>
+                    <p class="text-gray-400">Have a project in mind or want to say hi?</p>
+                </div>
+                
+                <form class="space-y-6">
+                    <div class="group">
+                        <label class="block text-sm text-gray-400 mb-2 ml-1">Your Name</label>
+                        <input type="text" id="name" class="modern-input" placeholder="John Doe" required>
                     </div>
-                    <div class="floating-label mb-6">
-                        <input type="email" id="email" class="contact-input" placeholder=" " required>
-                        <label for="email">Your Email</label>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2 ml-1">Your Email</label>
+                        <input type="email" id="email" class="modern-input" placeholder="john@example.com" required>
                     </div>
-                    <div class="floating-label mb-6">
-                        <textarea id="message" class="contact-input" rows="4" placeholder=" " required></textarea>
-                        <label for="message">Your Message</label>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2 ml-1">Message</label>
+                        <textarea id="message" class="modern-input" rows="4" placeholder="How can I help you?" required></textarea>
                     </div>
-                    <button type="submit" class="contact-btn w-full">
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg hover:shadow-lg hover:shadow-purple-500/40 transform hover:-translate-y-1 transition-all">
                         Send Message
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- Social Media Section -->
-        <section class="my-20 text-center">
-            <h2 class="section-title text-3xl font-bold mb-8 fade-in">Let's Connect</h2>
-            <div class="flex justify-center space-x-4">
-                <a href="https://instagram.com/sukh_rai898" target="_blank" class="social-icon text-pink-500 hover:text-pink-600">
-                    <i class="fab fa-instagram text-xl"></i>
-                </a>
-                <a href="https://instagram.com/sardar_ji_898" target="_blank" class="social-icon text-purple-500 hover:text-purple-600">
-                    <i class="fab fa-instagram text-xl"></i>
-                </a>
-                <a href="https://github.com/sukhdevr898" target="_blank" class="social-icon text-gray-800 hover:text-gray-900">
-                    <i class="fab fa-github text-xl"></i>
-                </a>
-                <a href="https://t.me/sukhdevr898" target="_blank" class="social-icon text-blue-500 hover:text-blue-600">
-                    <i class="fab fa-telegram text-xl"></i>
-                </a>
-                <a href="mailto:sukhdevr898@gmail.com" class="social-icon text-blue-600 hover:text-blue-800" title="Email">
-                    <i class="fa-solid fa-envelope text-xl"></i>
-                </a>
-                <a href="tel:9352037092" class="social-icon text-green-600 hover:text-green-800" title="Call">
-                    <i class="fa-solid fa-phone text-xl"></i>
-                </a>
-                <a href="https://linkedin.com/in/sukhdevr898" target="_blank" class="social-icon text-blue-700 hover:text-blue-900" title="LinkedIn">
-                    <i class="fab fa-linkedin-in text-xl"></i>
-                </a>
-            </div>
-        </section>
+        <!-- Footer -->
+        <footer class="pb-10 text-center text-gray-500 text-sm">
+            <p>&copy; 2026 Sukhdev Singh. Crafted with <i class="fas fa-heart text-red-500 mx-1"></i> & Code.</p>
+        </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Typing animation for roles
+            // Typing Animation
             const roles = [
                 "Computer Operator", 
                 "Machine Operator", 
@@ -679,131 +508,105 @@
                 "Software Developer", 
                 "Cybersecurity Enthusiast"
             ];
-            let currentRole = 0;
+            let roleIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
             const typingElement = document.querySelector('.typing-text');
-            
-            function typeRole() {
-                const role = roles[currentRole];
-                typingElement.textContent = role;
-                typingElement.style.width = '0';
-                typingElement.style.animation = 'none';
-                void typingElement.offsetWidth; // Trigger reflow
-                typingElement.style.animation = 'typing 3.5s steps(30) infinite, blinkCursor 0.7s infinite';
+            const typeSpeed = 100;
+            const deleteSpeed = 50;
+            const waitTime = 2000;
+
+            function type() {
+                const currentRole = roles[roleIndex];
                 
-                currentRole = (currentRole + 1) % roles.length;
+                if (isDeleting) {
+                    typingElement.textContent = currentRole.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typingElement.textContent = currentRole.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                if (!isDeleting && charIndex === currentRole.length) {
+                    isDeleting = true;
+                    setTimeout(type, waitTime);
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(type, 500);
+                } else {
+                    setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
+                }
             }
             
-            typeRole();
-            setInterval(typeRole, 3500);
+            type();
 
-            // Ripple effect for all clickable elements
-            function createRipple(event) {
-                const element = event.currentTarget;
-                const rect = element.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple-effect');
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-                element.appendChild(ripple);
-                
-                ripple.style.animation = 'ripple 0.6s linear';
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            }
-
-            // Add ripple effect to cards
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.addEventListener('click', createRipple);
-            });
-
-            // Add ripple effect to profile image
-            const profileImg = document.querySelector('.profile-img');
-            if(profileImg) profileImg.addEventListener('click', createRipple);
-
-            // Add ripple effect to buttons
-            const buttons = document.querySelectorAll('.contact-btn, .social-icon');
-            buttons.forEach(button => {
-                button.addEventListener('click', createRipple);
-            });
-
-            // Animate elements when they come into view
-            const fadeElements = document.querySelectorAll('.fade-in');
+            // Intersection Observer for Scroll Animations
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.animationPlayState = 'running';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
                     }
                 });
             }, { threshold: 0.1 });
 
-            fadeElements.forEach(el => {
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                // Set initial state for JS animation override
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.animation = 'none'; // reset css animation
+                el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
                 observer.observe(el);
             });
 
-            // Motivational quotes rotation
+            // Quote Rotator
             const quotes = [
-                {
-                    text: "The only limit to our realization of tomorrow is our doubts of today.",
-                    author: "Franklin D. Roosevelt"
-                },
-                {
-                    text: "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-                    author: "Winston Churchill"
-                },
-                {
-                    text: "The future belongs to those who believe in the beauty of their dreams.",
-                    author: "Eleanor Roosevelt"
-                },
-                {
-                    text: "Your time is limited, don't waste it living someone else's life.",
-                    author: "Steve Jobs"
-                },
-                {
-                    text: "Innovation distinguishes between a leader and a follower.",
-                    author: "Steve Jobs"
-                }
+                { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+                { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+                { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+                { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" }
             ];
             
-            const quoteContainer = document.querySelector('.quote-text');
+            const quoteText = document.querySelector('.quote-text');
             const quoteAuthor = document.querySelector('.quote-author');
-            let quoteIndex = 0;
+            let qIndex = 0;
             
-            function changeQuote() {
-                quoteContainer.style.opacity = 0;
+            function updateQuote() {
+                quoteText.style.opacity = 0;
                 quoteAuthor.style.opacity = 0;
                 
                 setTimeout(() => {
-                    quoteIndex = (quoteIndex + 1) % quotes.length;
-                    quoteContainer.textContent = quotes[quoteIndex].text;
-                    quoteAuthor.textContent = `- ${quotes[quoteIndex].author}`;
-                    
-                    quoteContainer.style.opacity = 1;
+                    qIndex = (qIndex + 1) % quotes.length;
+                    quoteText.textContent = `"${quotes[qIndex].text}"`;
+                    quoteAuthor.textContent = `- ${quotes[qIndex].author}`;
+                    quoteText.style.opacity = 1;
                     quoteAuthor.style.opacity = 1;
                 }, 500);
             }
             
-            setInterval(changeQuote, 8000);
+            // Initialize first quote
+            quoteText.textContent = `"${quotes[0].text}"`;
+            quoteAuthor.textContent = `- ${quotes[0].author}`;
+            setInterval(updateQuote, 6000);
 
-            // Form validation
+            // Form Handling
             const form = document.querySelector('form');
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                const btn = form.querySelector('button');
+                const originalText = btn.textContent;
                 
-                // Simple validation
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
+                btn.textContent = 'Sending...';
+                btn.disabled = true;
                 
-                if (name && email && message) {
-                    alert('Thank you for your message! I will get back to you soon.');
+                setTimeout(() => {
+                    alert('Message sent successfully! I will contact you shortly.');
                     form.reset();
-                }
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 1500);
             });
         });
     </script>
