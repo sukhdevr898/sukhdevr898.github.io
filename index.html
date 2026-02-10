@@ -5,180 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sukhdev Singh - Professional Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #ec4899;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-dark);
-            color: #f8fafc;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Animated Background */
-        .bg-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: float 20s infinite ease-in-out;
-            opacity: 0.4;
-        }
-        .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: var(--accent); bottom: 10%; right: -50px; animation-delay: -5s; }
-        .orb-3 { width: 200px; height: 200px; background: var(--secondary); top: 40%; left: 40%; animation-delay: -10s; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, 50px); }
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1.5rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .glass-card:hover::before { opacity: 1; }
-
-        /* Typography & Gradient Text */
-        .font-heading { font-family: 'Space Grotesk', sans-serif; }
-        
-        .text-gradient {
-            background: linear-gradient(135deg, #818cf8 0%, #d8b4fe 50%, #f472b6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Profile Image Glow */
-        .profile-glow {
-            position: relative;
-        }
-        .profile-glow::after {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            z-index: -1;
-            animation: spin 4s linear infinite;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Typing Effect */
-        .typing-text {
-            border-right: 3px solid var(--accent);
-            padding-right: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
-            color: #cbd5e1;
-        }
-
-        /* Timeline Styling */
-        .timeline { position: relative; max-width: 900px; margin: 0 auto; }
-        .timeline::after {
-            content: ''; position: absolute; width: 2px;
-            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-            top: 0; bottom: 0; left: 50%; margin-left: -1px;
-        }
-        .timeline-item { padding: 10px 50px; position: relative; width: 50%; }
-        .timeline-item::after {
-            content: ''; position: absolute; width: 16px; height: 16px;
-            background: var(--bg-dark); border: 3px solid var(--secondary);
-            border-radius: 50%; top: 20px; z-index: 10;
-            box-shadow: 0 0 10px var(--secondary);
-        }
-        .left { left: 0; text-align: right; }
-        .right { left: 50%; }
-        .left::after { right: -9px; }
-        .right::after { left: -9px; }
-
-        @media (max-width: 768px) {
-            .timeline::after { left: 20px; }
-            .timeline-item { width: 100%; padding-left: 50px; padding-right: 10px; text-align: left; }
-            .timeline-item::after { left: 11px; }
-            .left { left: 0; }
-            .right { left: 0; }
-        }
-
-        /* Inputs */
-        .modern-input {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        .modern-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Animations */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s forwards;
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-
-        /* Social Icons */
-        .social-btn {
-            width: 3rem; height: 3rem;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .social-btn:hover {
-            background: white;
-            transform: translateY(-3px) scale(1.1);
-        }
-        .social-btn:hover i { color: var(--bg-dark); }
-    </style>
+    
+    <!-- Link to your CSS file here -->
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
 
@@ -186,6 +19,9 @@
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
 
     <div class="container mx-auto px-4 py-8 max-w-6xl relative z-10">
         
@@ -196,6 +32,7 @@
                 <div class="relative inline-block mb-10 fade-in-up">
                     <div class="profile-glow rounded-full p-1">
                         <div class="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-[#0f172a] relative z-10 bg-gray-800">
+                            <!-- Replace with your actual image path -->
                             <img src="photo.png"
                                  alt="Sukhdev Singh"
                                  class="w-full h-full object-cover"
@@ -203,7 +40,6 @@
                                  style="opacity: 0; transition: opacity 0.5s ease">
                         </div>
                     </div>
-                    <!-- Status Badge -->
                     <div class="absolute bottom-2 right-2 z-20">
                         <div class="bg-gray-900 rounded-full p-1.5 border border-gray-700">
                             <div class="bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-1.5">
@@ -226,7 +62,6 @@
                     <span class="tracking-wide">Bharatpur, Rajasthan, India</span>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex flex-wrap justify-center gap-4 mb-10 fade-in-up delay-400">
                     <a href="#contact" class="px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg shadow-purple-900/30 hover:shadow-purple-900/50 transform hover:scale-105 transition-all">
                         Hire Me
@@ -236,7 +71,6 @@
                     </a>
                 </div>
 
-                <!-- Social Links -->
                 <div class="flex flex-wrap justify-center gap-4 fade-in-up delay-400">
                     <a href="mailto:sukhdevr898@gmail.com" class="social-btn" title="Email"><i class="fa-solid fa-envelope text-white"></i></a>
                     <a href="tel:9352037092" class="social-btn" title="Call"><i class="fa-solid fa-phone text-white"></i></a>
@@ -272,7 +106,7 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Skill Cards -->
+                <!-- Skill 1 -->
                 <div class="glass-card p-8 group fade-in-up delay-100">
                     <div class="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-laptop-code text-2xl"></i>
@@ -280,7 +114,7 @@
                     <h3 class="text-xl font-bold mb-3 text-white">Computer Operator</h3>
                     <p class="text-gray-400 leading-relaxed">Efficient in computer operations, system maintenance, and technical troubleshooting with precision.</p>
                 </div>
-
+                <!-- Skill 2 -->
                 <div class="glass-card p-8 group fade-in-up delay-100">
                     <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 text-purple-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-cogs text-2xl"></i>
@@ -288,7 +122,7 @@
                     <h3 class="text-xl font-bold mb-3 text-white">Machine Operator</h3>
                     <p class="text-gray-400 leading-relaxed">Skilled in operating and maintaining industrial machinery and laser label printers.</p>
                 </div>
-
+                <!-- Skill 3 -->
                 <div class="glass-card p-8 group fade-in-up delay-200">
                     <div class="w-14 h-14 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6 text-pink-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-robot text-2xl"></i>
@@ -296,7 +130,7 @@
                     <h3 class="text-xl font-bold mb-3 text-white">AI Trainer</h3>
                     <p class="text-gray-400 leading-relaxed">Specialized in training and optimizing AI models for education and productivity tools.</p>
                 </div>
-
+                <!-- Skill 4 -->
                 <div class="glass-card p-8 group fade-in-up delay-200">
                     <div class="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6 text-green-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-code text-2xl"></i>
@@ -304,7 +138,7 @@
                     <h3 class="text-xl font-bold mb-3 text-white">Web Developer</h3>
                     <p class="text-gray-400 leading-relaxed">Building modern, responsive websites and web apps with HTML, JS, PHP, MySQL, and React.</p>
                 </div>
-
+                <!-- Skill 5 -->
                 <div class="glass-card p-8 group fade-in-up delay-300">
                     <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-6 text-yellow-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-laptop text-2xl"></i>
@@ -312,7 +146,7 @@
                     <h3 class="text-xl font-bold mb-3 text-white">Software Developer</h3>
                     <p class="text-gray-400 leading-relaxed">Developing robust, scalable software and automation solutions for business and education.</p>
                 </div>
-
+                <!-- Skill 6 -->
                 <div class="glass-card p-8 group fade-in-up delay-300">
                     <div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mb-6 text-red-400 group-hover:scale-110 transition-transform">
                         <i class="fas fa-shield-alt text-2xl"></i>
@@ -410,6 +244,7 @@
             </div>
 
             <div class="timeline fade-in-up">
+                <!-- Experience items (same as before) -->
                 <div class="timeline-item left">
                     <div class="glass-card p-6 hover:border-blue-500/50 transition-colors">
                         <h3 class="font-bold text-lg text-blue-400">Machine Operator</h3>
@@ -471,20 +306,20 @@
                     <p class="text-gray-400">Have a project in mind or want to say hi?</p>
                 </div>
                 
-                <form class="space-y-6">
+                <form id="contact-form" class="space-y-6">
                     <div class="group">
                         <label class="block text-sm text-gray-400 mb-2 ml-1">Your Name</label>
-                        <input type="text" id="name" class="modern-input" placeholder="John Doe" required>
+                        <input type="text" name="name" id="name" class="modern-input" placeholder="John Doe" required>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-400 mb-2 ml-1">Your Email</label>
-                        <input type="email" id="email" class="modern-input" placeholder="john@example.com" required>
+                        <input type="email" name="email" id="email" class="modern-input" placeholder="john@example.com" required>
                     </div>
                     <div>
                         <label class="block text-sm text-gray-400 mb-2 ml-1">Message</label>
-                        <textarea id="message" class="modern-input" rows="4" placeholder="How can I help you?" required></textarea>
+                        <textarea name="message" id="message" class="modern-input" rows="4" placeholder="How can I help you?" required></textarea>
                     </div>
-                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg hover:shadow-lg hover:shadow-purple-500/40 transform hover:-translate-y-1 transition-all">
+                    <button type="submit" class="submit-btn w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg hover:shadow-lg hover:shadow-purple-500/40 transform hover:-translate-y-1 transition-all flex justify-center items-center">
                         Send Message
                     </button>
                 </form>
@@ -497,118 +332,7 @@
         </footer>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Typing Animation
-            const roles = [
-                "Computer Operator", 
-                "Machine Operator", 
-                "AI Trainer", 
-                "Web Developer", 
-                "Software Developer", 
-                "Cybersecurity Enthusiast"
-            ];
-            let roleIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            const typingElement = document.querySelector('.typing-text');
-            const typeSpeed = 100;
-            const deleteSpeed = 50;
-            const waitTime = 2000;
-
-            function type() {
-                const currentRole = roles[roleIndex];
-                
-                if (isDeleting) {
-                    typingElement.textContent = currentRole.substring(0, charIndex - 1);
-                    charIndex--;
-                } else {
-                    typingElement.textContent = currentRole.substring(0, charIndex + 1);
-                    charIndex++;
-                }
-
-                if (!isDeleting && charIndex === currentRole.length) {
-                    isDeleting = true;
-                    setTimeout(type, waitTime);
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    roleIndex = (roleIndex + 1) % roles.length;
-                    setTimeout(type, 500);
-                } else {
-                    setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
-                }
-            }
-            
-            type();
-
-            // Intersection Observer for Scroll Animations
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animationPlayState = 'running';
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.fade-in-up').forEach(el => {
-                // Set initial state for JS animation override
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.animation = 'none'; // reset css animation
-                el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-                observer.observe(el);
-            });
-
-            // Quote Rotator
-            const quotes = [
-                { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
-                { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
-                { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-                { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" }
-            ];
-            
-            const quoteText = document.querySelector('.quote-text');
-            const quoteAuthor = document.querySelector('.quote-author');
-            let qIndex = 0;
-            
-            function updateQuote() {
-                quoteText.style.opacity = 0;
-                quoteAuthor.style.opacity = 0;
-                
-                setTimeout(() => {
-                    qIndex = (qIndex + 1) % quotes.length;
-                    quoteText.textContent = `"${quotes[qIndex].text}"`;
-                    quoteAuthor.textContent = `- ${quotes[qIndex].author}`;
-                    quoteText.style.opacity = 1;
-                    quoteAuthor.style.opacity = 1;
-                }, 500);
-            }
-            
-            // Initialize first quote
-            quoteText.textContent = `"${quotes[0].text}"`;
-            quoteAuthor.textContent = `- ${quotes[0].author}`;
-            setInterval(updateQuote, 6000);
-
-            // Form Handling
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const btn = form.querySelector('button');
-                const originalText = btn.textContent;
-                
-                btn.textContent = 'Sending...';
-                btn.disabled = true;
-                
-                setTimeout(() => {
-                    alert('Message sent successfully! I will contact you shortly.');
-                    form.reset();
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                }, 1500);
-            });
-        });
-    </script>
+    <!-- Link to your JS file here -->
+    <script src="script.js"></script>
 </body>
 </html>
