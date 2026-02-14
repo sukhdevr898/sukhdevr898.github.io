@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Krishna | A Premium Valentine Story</title>
+
+    <!-- Premium Typography: Cormorant Garamond for elegance, Montserrat for modern readability, Great Vibes for script accents -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP Animation Engine with TextPlugin for typing effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <!-- Canvas Confetti for celebratory effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- Global Variables & Resets --- */
+        :root {
+            --rose-gold: #E0BFB8; /* Soft, warm gold */
+            --deep-pink: #A83A5D; /* Deeper, richer pink */
+            --text-light: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --bg-dark: #0f0f0f; /* Near black background */
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-strong: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling body */
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- Ambient Effects --- */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 500; opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .ambient-orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.5;
+            animation: pulseOrb 15s infinite alternate;
+        }
+        .orb-1 { top: -15%; left: -15%; width: 60vw; height: 60vw; background: var(--deep-pink); }
+        .orb-2 { bottom: -15%; right: -15%; width: 70vw; height: 70vw; background: var(--rose-gold); }
+        
+        @keyframes pulseOrb {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(20px, -20px); }
+            100% { transform: scale(1) translate(0, 0); }
+        }
+
+        /* --- Main App Frame (Simulates phone screen) --- */
+        .app-frame {
+            width: 100%; height: 100%; max-width: 480px; /* Mobile width constraint */
+            position: relative; overflow: hidden;
+            background: rgba(0,0,0,0.2);
+            box-shadow: 0 0 100px rgba(0,0,0,0.4);
+        }
+
+        /* --- UI Components --- */
+        .progress-indicator {
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: flex; gap: 5px; z-index: 100;
+        }
+        .progress-bar {
+            flex: 1; height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 0%; background: var(--rose-gold);
+            box-shadow: 0 0 8px var(--rose-gold);
+            transition: width 0.15s ease-out;
+        }
+
+        .music-player {
+            position: absolute; top: 30px; right: 20px; z-index: 101;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            color: var(--rose-gold); font-size: 1.1em;
+        }
+        .music-player.playing { animation: spinRecord 4s linear infinite; box-shadow: 0 0 15px var(--rose-gold); }
+        @keyframes spinRecord { 100% { transform: rotate(360deg); } }
+
+        /* Navigation zones for tapping */
+        .nav-zone {
+            position: absolute; top: 0; bottom: 0; width: 40%; z-index: 50;
+        }
+        .nav-left { left: 0; }
+        .nav-right { right: 0; }
+
+        /* --- Slide Structure --- */
+        .story-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; visibility: hidden; transition: opacity 0.8s ease-in-out;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 25px; text-align: center;
+        }
+        .story-slide.active { opacity: 1; visibility: visible; z-index: 10; }
+
+        .slide-background {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            z-index: -1;
+            filter: brightness(0.6) grayscale(10%);
+            transform: scale(1.05); /* Initial scale for subtle parallax */
+        }
+        
+        /* Content wrappers for different layouts */
+        .content-area-center {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100%; width: 100%; max-width: 90%;
+        }
+        .content-area-bottom {
+            display: flex; flex-direction: column; justify-content: flex-end;
+            height: 100%; width: 100%; max-width: 90%;
+            padding-bottom: 80px;
+        }
+
+        /* --- Typography Styles --- */
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif; font-size: 4.5rem; line-height: 0.9;
+            font-weight: 300; text-transform: uppercase; letter-spacing: -2px;
+            background: linear-gradient(to bottom, var(--text-light), var(--text-muted));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .script-accent {
+            font-family: 'Great Vibes', cursive; font-size: 2.8rem;
+            color: var(--rose-gold); margin-top: -15px; display: block;
+            text-shadow: 0 0 10px rgba(224,191,184,0.3);
+        }
+        .body-copy {
+            font-family: 'Montserrat', sans-serif; font-size: 1rem; line-height: 1.6;
+            font-weight: 300; opacity: 0.85; margin-top: 15px;
+        }
+        .caption-text {
+            font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; line-height: 1.3;
+            font-style: italic; color: var(--text-light);
+        }
+
+        /* --- Glassmorphic Card Styles --- */
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px;
+            box-shadow: var(--shadow-strong);
+            opacity: 0; transform: translateY(30px); /* Initial state for animation */
+        }
+
+        /* --- Specific Slide Layouts --- */
+        .intro-slide .glass-panel { max-width: 90%; }
+        .quote-slide .glass-panel { max-width: 90%; }
+        .why-special-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 300px;
+        }
+        .trait-card {
+            background: rgba(255,255,255,0.08); padding: 15px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.85rem; letter-spacing: 0.5px;
+            opacity: 0; transform: scale(0.9); /* Initial state for animation */
+        }
+        .trait-card i { color: var(--rose-gold); font-size: 1.3rem; margin-bottom: 5px; }
+
+        .timeline-gallery {
+            display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 300px;
+        }
+        .timeline-item {
+            display: flex; align-items: center; gap: 15px; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px;
+            opacity: 0; transform: translateX(-30px); /* Initial state for animation */
+        }
+        .timeline-item img {
+            width: 70px; height: 70px; object-fit: cover; border-radius: 10px;
+            border: 1px solid var(--rose-gold); flex-shrink: 0;
+        }
+        .timeline-item p { font-size: 0.85rem; line-height: 1.4; text-align: left; }
+
+        /* --- Opening Screen --- */
+        #welcome-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); z-index: 999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+            transform-origin: bottom;
+        }
+        .welcome-title {
+            font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; letter-spacing: 5px;
+            color: var(--text-muted); margin-bottom: 10px;
+        }
+        .welcome-subtitle {
+            font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--rose-gold);
+            text-shadow: 0 0 20px rgba(224,191,184,0.5);
+            margin-bottom: 30px;
+        }
+        .start-button {
+            padding: 15px 45px; background: transparent; border: 1px solid var(--rose-gold);
+            color: var(--rose-gold); font-family: 'Montserrat', sans-serif;
+            letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+            transition: 0.4s ease-in-out; font-weight: 500;
+            box-shadow: 0 0 0 rgba(224,191,184,0);
+        }
+        .start-button:hover {
+            background: var(--rose-gold); color: var(--bg-dark);
+            box-shadow: 0 0 25px rgba(224,191,184,0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+
+    <div class="app-frame">
+        <!-- Background Music -->
+        <audio id="bg-music" loop>
+            <source src="https://github.com/sukhdevr898/sukhdevr898/raw/refs/heads/main/bg.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen">
+            <h2 class="welcome-title">THE EDITION</h2>
+            <h1 class="welcome-subtitle">For Krishna</h1>
+            <button class="start-button" onclick="startStory()">Open</button>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator" id="progress-bars"></div>
+        
+        <!-- Music Control -->
+        <div class="music-player" onclick="toggleMusic()">
+            <i class="fa-solid fa-music"></i>
+        </div>
+
+        <!-- Navigation Zones -->
+        <div class="nav-zone nav-left" onclick="navigateSlides(-1)"></div>
+        <div class="nav-zone nav-right" onclick="navigateSlides(1)"></div>
+
+        <!-- Story Slides Container -->
+        <div id="story-slides-container">
+
+            <!-- Slide 1: Intro Message -->
+            <div class="story-slide active" data-bg=""> 
+                <div class="content-area-center">
+                    <div class="glass-panel">
+                        <p style="font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; color: var(--rose-gold);">Happy Valentine's</p>
+                        <h1 class="hero-title" style="margin-top: 15px;">BESTIE<br>VIBES</h1>
+                        <span class="script-accent">Krishna</span>
+                        <p class="body-copy">To my best friend, my safe place, and my forever vibe.</p>
+                        <div style="width: 1px; height: 50px; background: var(--glass-border); margin: 30px auto 15px;"></div>
+                        <p style="font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7;">Tap Right to Continue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Memory 1 -->
+            <div class="story-slide" data-bg="1.jpeg">
+                <div class="slide-background"></div>
+                <div class="content-area-bottom">
+                    <div class="glass-panel" style="width: 100%; text-align: left;">
+                        <p class="caption-text">"Every smile of yours makes my day brighter, truly. ✨"</p>
+                        <p class="body-copy" style="font-size: 0.8rem; margin-top: 10px;">The kind of joy that lights up any room.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Memory 2 -->
+            <div class="story-slide" data-bg="2.jpeg">
+                <div class="slide-background"></div>
+                <div class="content-area-bottom">
+                    <div class="glass-panel" style="width: 100%; text-align: left;">
+                        <p class="caption-text">"Best friends like you are rare gems, a true blessing. 💎"</p>
+                        <p class="body-copy" style="font-size: 0.8rem; margin-top: 10px;">I wouldn't trade our bond for anything.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Quote Section -->
+            <div class="story-slide" data-bg="3.jpeg">
+                <div class="slide-background" style="filter: brightness(0.4) blur(8px);"></div>
+                <div class="content-area-center">
+                    <div class="glass-panel quote-slide" style="max-width: 90%;">
+                        <i class="fa-solid fa-quote-left" style="color: var(--rose-gold); font-size: 2rem; margin-bottom: 20px;"></i>
+                        <h2 id="typewriter-text" class="caption-text" style="min-height: 100px;"></h2>
+                        <p class="body-copy" style="font-size: 0.8rem; margin-top: 20px; opacity: 0.7;">— From the heart, always.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Why You're Special (Traits) -->
+            <div class="story-slide" data-bg="4.jpeg">
+                <div class="slide-background" style="filter: brightness(0.5) blur(5px);"></div>
+                <div class="content-area-center">
+                    <h2 class="hero-title" style="font-size: 2.8rem; margin-bottom: 30px;">Your Essence</h2>
+                    <div class="why-special-grid">
+                        <div class="trait-card"><i class="fa-solid fa-star"></i><br>Always Supportive</div>
+                        <div class="trait-card"><i class="fa-regular fa-heart"></i><br>Pure Hearted</div>
+                        <div class="trait-card"><i class="fa-solid fa-fire"></i><br>Crazy but Lovable</div>
+                        <div class="trait-card"><i class="fa-solid fa-anchor"></i><br>My Constant</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Memory 3 -->
+            <div class="story-slide" data-bg="5.jpeg">
+                <div class="slide-background"></div>
+                <div class="content-area-bottom">
+                    <div class="glass-panel" style="width: 100%; text-align: left;">
+                        <p class="caption-text">"Some souls are connected forever, no matter the label."</p>
+                        <p class="body-copy" style="font-size: 0.8rem; margin-top: 10px;">Our journey together is a testament to that.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 7: Memory 4 -->
+            <div class="story-slide" data-bg="6.jpeg">
+                <div class="slide-background"></div>
+                <div class="content-area-bottom">
+                    <div class="glass-panel" style="width: 100%; text-align: left;">
+                        <p class="caption-text">"Adventures are better with you by my side. Every single one."</p>
+                        <p class="body-copy" style="font-size: 0.8rem; margin-top: 10px;">Creating endless stories, one memory at a time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Friendship Journey (Two images side-by-side or stacked) -->
+            <div class="story-slide" data-bg="7.jpeg">
+                <div class="slide-background" style="filter: brightness(0.3) blur(10px);"></div>
+                <div class="content-area-center">
+                    <h2 class="hero-title" style="font-size: 2.2rem; margin-bottom: 30px;">Our Journey</h2>
+                    <div class="timeline-gallery">
+                        <div class="timeline-item">
+                            <img src="7.jpeg" alt="Memory">
+                            <p>From day one, you've been a guiding light and a burst of laughter.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <img src="8.jpeg" alt="Memory">
+                            <p>Here's to many more chapters of unforgettable moments together!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Final Valentine Message -->
+            <div class="story-slide" data-bg="">
+                <div class="slide-background" style="background: linear-gradient(145deg, var(--deep-pink), var(--bg-dark) 70%); filter: none;"></div>
+                <div class="content-area-center">
+                    <div class="glass-panel">
+                        <i class="fa-solid fa-envelope-open-text" style="font-size: 3rem; color: var(--rose-gold); margin-bottom: 20px;"></i>
+                        <h2 class="script-accent" style="font-size: 2.5rem;">Dearest Krishna,</h2>
+                        <p class="body-copy" style="margin: 20px 0; max-width: 300px;">
+                            This Valentine’s Day is truly special because of you. Thank you for being my anchor, my confidant, my happiness. I'm grateful for every single moment.
+                        </p>
+                        <h3 class="hero-title" style="font-size: 2rem; margin-top: 20px;">Happy Valentine's Day! <span style="color: var(--rose-gold);">💕</span></h3>
+                        <button class="start-button" style="margin-top: 20px;" onclick="triggerConfetti()">Send Love Back!</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(TextPlugin); // Register GSAP TextPlugin for typing effect
+
+        const storySlides = document.querySelectorAll('.story-slide');
+        const progressBarContainer = document.getElementById('progress-bars');
+        const backgroundMusic = document.getElementById('bg-music');
+        let currentSlideIndex = 0;
+        let isMusicPlaying = false;
+
+        // Initialize progress bars based on the number of slides
+        storySlides.forEach((_, index) => {
+            const bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            bar.innerHTML = `<div class="progress-fill" id="fill-${index}"></div>`;
+            progressBarContainer.appendChild(bar);
+        });
+
+        // --- Core Functions ---
+        function startStory() {
+            // Animate welcome screen out (sliding down)
+            gsap.to('#welcome-screen', { 
+                y: '100%', 
+                duration: 1.2, 
+                ease: 'power4.inOut', 
+                onComplete: () => {
+                    document.getElementById('welcome-screen').style.display = 'none';
+                    playBackgroundMusic(); // Start music after user interaction
+                    updateSlideContent(); // Load and animate the first visible slide
+                }
+            });
+        }
+
+        function playBackgroundMusic() {
+            backgroundMusic.volume = 0.6; // Set initial volume
+            backgroundMusic.play().then(() => {
+                isMusicPlaying = true;
+                document.querySelector('.music-player').classList.add('playing');
+                document.querySelector('.music-player i').className = 'fa-solid fa-pause';
+            }).catch(e => console.error("Autoplay prevented:", e));
+        }
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                isMusicPlaying = false;
+                document.querySelector('.music-player').classList.remove('playing');
+                document.querySelector('.music-player i').className = 'fa-solid fa-music';
+            } else {
+                playBackgroundMusic(); // Re-attempt play
+            }
+        }
+
+        function navigateSlides(direction) {
+            let newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < storySlides.length) {
+                currentSlideIndex = newIndex;
+                updateSlideContent();
+            } else if (newIndex >= storySlides.length) {
+                // If at the end and trying to go next, trigger confetti or loop
+                triggerConfetti(); 
+            }
+        }
+
+        function updateSlideContent() {
+            storySlides.forEach((slide, index) => {
+                const bgElement = slide.querySelector('.slide-background');
+                const panelElement = slide.querySelector('.glass-panel');
+                
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                    if (bgElement) {
+                        // Reset and animate background image
+                        gsap.set(bgElement, { scale: 1.05 });
+                        gsap.to(bgElement, { scale: 1, duration: 8, ease: 'linear' }); // Gentle Ken Burns effect
+                    }
+                    animateElementsIn(slide); // Trigger entrance animations for current slide
+                } else {
+                    slide.classList.remove('active');
+                    // Reset elements for next entrance
+                    if (panelElement) gsap.set(panelElement, { opacity: 0, y: 30 });
+                    slide.querySelectorAll('.trait-card, .timeline-item').forEach(el => gsap.set(el, { opacity: 0, scale: 0.9, x: -30 }));
+                }
+
+                // Update progress bars
+                const fill = document.getElementById(`fill-${index}`);
+                if (index <= currentSlideIndex) {
+                    fill.style.width = '100%';
+                } else {
+                    fill.style.width = '0%';
+                }
+            });
+        }
+
+        function animateElementsIn(slide) {
+            const panel = slide.querySelector('.glass-panel');
+            if (panel) {
+                gsap.fromTo(panel, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.3 });
+            }
+
+            const traitCards = slide.querySelectorAll('.trait-card');
+            if (traitCards.length > 0) {
+                gsap.fromTo(traitCards, 
+                    { opacity: 0, scale: 0.9 }, 
+                    { opacity: 1, scale: 1, duration: 0.6, stagger: 0.15, ease: 'back.out(1.7)', delay: 0.6 }
+                );
+            }
+
+            const timelineItems = slide.querySelectorAll('.timeline-item');
+            if (timelineItems.length > 0) {
+                gsap.fromTo(timelineItems, 
+                    { opacity: 0, x: -30 }, 
+                    { opacity: 1, x: 0, duration: 0.8, stagger: 0.2, ease: 'power3.out', delay: 0.6 }
+                );
+            }
+
+            // Specific animation for the quote slide
+            if (currentSlideIndex === 3) {
+                const quoteText = "“Valentine’s Day isn’t just for couples, it’s about love — and you’re my favorite kind. Some souls are connected forever, no matter the label.”";
+                gsap.to("#typewriter-text", {
+                    duration: 3.5, // Typing speed
+                    delay: 0.8,
+                    text: { value: quoteText },
+                    ease: "none"
+                });
+            }
+        }
+
+        // --- Visual Effects ---
+        function triggerConfetti() {
+            const colors = [varToString('--rose-gold'), '#ffffff', '#FFD700', varToString('--deep-pink')]; // Use CSS variables
+            
+            // Burst from center
+            confetti({
+                particleCount: 150,
+                spread: 120,
+                origin: { y: 0.6, x: 0.5 },
+                colors: colors,
+                disableForReducedMotion: true
+            });
+            // Additional bursts from sides
+            setTimeout(() => {
+                confetti({ particleCount: 75, angle: 60, spread: 70, origin: { x: 0 }, colors: colors, disableForReducedMotion: true });
+                confetti({ particleCount: 75, angle: 120, spread: 70, origin: { x: 1 }, colors: colors, disableForReducedMotion: true });
+            }, 500);
+        }
+
+        // Helper to get CSS variable values
+        function varToString(varName) {
+            return getComputedStyle(document.documentElement).getPropertyValue(varName);
+        }
+
+        // --- Initial Load Setup (Preload backgrounds and set them) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            storySlides.forEach(slide => {
+                const bgPath = slide.getAttribute('data-bg');
+                if (bgPath) {
+                    const img = document.createElement('img');
+                    img.src = bgPath;
+                    img.style.display = 'none'; // Preload hidden
+                    img.onload = () => {
+                        const bgDiv = document.createElement('div');
+                        bgDiv.className = 'slide-background';
+                        bgDiv.style.backgroundImage = `url('${bgPath}')`;
+                        slide.prepend(bgDiv);
+                    };
+                    document.body.appendChild(img); // Add to DOM to trigger load
+                }
+            });
+        });
+    </script>
+</body>
+</html>
